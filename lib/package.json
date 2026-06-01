@@ -1,0 +1,16 @@
+{
+  "name": "@org/lib",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "exports": {
+    ".": {
+      "@org/source": "./index.ts",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
