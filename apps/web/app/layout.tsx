@@ -39,7 +39,7 @@ export default function RootLayout({
         robotoHeading.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-screen w-full ">{children}</body>
     </html>
   );
 }
