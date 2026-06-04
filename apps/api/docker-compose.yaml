@@ -1,0 +1,15 @@
+services:
+  postgress:
+    image: postgres:latest
+    container_name: maamo_ecommerce
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: maamo_db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib
+
+volumes:
+  postgres_data:

@@ -3,7 +3,6 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -23,23 +22,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { API } from "@/lib/api";
 import { RegisterSchema, RegisterSchemaType } from "@org/lib";
+import { useTransition } from "react";
+import { toast } from "sonner";
 import PasswordInput from "./PasswordInput";
 
 export default function RegisterForm() {
-  const [showPassword, setShowPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors, isSubmitting: isFormSubmitting },
   } = useForm<RegisterSchemaType>({
     resolver: standardSchemaResolver(RegisterSchema),
   });
+  const [isProcessing, setIsProcessing] = useTransition();
+
+  const isSubmitting = isProcessing || isFormSubmitting;
 
   async function onSubmit(data: RegisterSchemaType) {
-    console.log(data);
+    setIsProcessing(async () => {
+      const result = await API.user.create(data);
+      if (result.status) {
+        toast.success("Sucessfully Created account.");
+        reset();
+        return;
+      }
+      toast.error(result.errors?.message);
+    });
   }
 
   return (
@@ -68,7 +80,7 @@ export default function RegisterForm() {
           <FieldGroup>
             <Field data-invalid={!!errors.name}>
               <Input
-                placeholder="John Doe"
+                placeholder="Enter Your name"
                 aria-invalid={!!errors.name}
                 className="h-12.5"
                 {...register("name")}
@@ -79,7 +91,7 @@ export default function RegisterForm() {
             <Field data-invalid={!!errors.email}>
               <Input
                 type="email"
-                placeholder="you@example.com"
+                placeholder="Enter Your Email"
                 aria-invalid={!!errors.email}
                 className="h-12.5"
                 {...register("email")}

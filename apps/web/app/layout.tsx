@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const robotoHeading = Roboto({
@@ -39,7 +40,10 @@ export default function RootLayout({
         robotoHeading.variable,
       )}
     >
-      <body className="min-h-screen w-full ">{children}</body>
+      <body className="min-h-screen w-full ">
+        {children}
+        <Toaster position="top-center" />
+      </body>
     </html>
   );
 }
