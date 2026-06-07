@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { SessionAuthGuard } from './guards/session-auth.guard.js';
 import { LocalAuthGuard } from './guards/local-auth.guard.js';
-import { LocalStrategy } from './strategies/local.stragies.js';
+import { LocalStrategy } from './strategies/local.strategy.js';
 import { TokenService } from './token.service.js';
 
 @Module({
