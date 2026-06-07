@@ -22,8 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { API } from "@/lib/api";
-import { RegisterSchema, RegisterSchemaType } from "@org/lib";
+import { signUp } from "@/lib/actions/user.actions";
+import { RegisterSchema, type RegisterSchemaType } from "@org/lib";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import PasswordInput from "./PasswordInput";
@@ -44,7 +44,7 @@ export default function RegisterForm() {
 
   async function onSubmit(data: RegisterSchemaType) {
     setIsProcessing(async () => {
-      const result = await API.user.create(data);
+      const result = await signUp(data);
       if (result.status) {
         toast.success("Sucessfully Created account.");
         reset();

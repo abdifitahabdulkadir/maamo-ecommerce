@@ -21,11 +21,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "src/*": ["./src/*"],
+      "prisma/*": ["./prisma/*"]
+    }
   },
-  "paths": {
-    "src/*": ["./src/*"],
-  },
-  "incremental": true,
-  "skipLibCheck": true,
-  "strictNullChecks": true,
+  "references": [
+    {
+      "path": "../../lib"
+    }
+  ]
 }

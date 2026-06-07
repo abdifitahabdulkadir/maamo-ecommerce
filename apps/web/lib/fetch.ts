@@ -1,8 +1,8 @@
+import { ActionResponse } from "@org/lib";
 import { HTTP_METHOD } from "next/dist/server/web/http";
-import type { ActionResponse } from "./types";
+
 
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:3001";
-const TOKEN_KEY = "access_token";
 
 type RequestParams<B = unknown> = {
   url: string;

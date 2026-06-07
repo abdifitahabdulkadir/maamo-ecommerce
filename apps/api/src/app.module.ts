@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import z from 'zod';
+import { AuthModule } from './auth/auth.module.js';
 import { DatabaseModule } from './database/database.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -9,6 +11,7 @@ import { DatabaseModule } from './database/database.module.js';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+
       validate(result) {
         return z
           .object({
@@ -17,6 +20,8 @@ import { DatabaseModule } from './database/database.module.js';
           .parse(result);
       },
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

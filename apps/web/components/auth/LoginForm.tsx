@@ -1,10 +1,12 @@
 "use client";
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { LoginSchema, type LoginSchemaType } from "@org/lib";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import PasswordInput from "@/components/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
@@ -16,8 +18,13 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { signIn } from "@/lib/actions/user.actions";
+import { LoginSchema, type LoginSchemaType } from "@org/lib";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const {
     register,
     handleSubmit,
@@ -27,8 +34,17 @@ export default function LoginForm() {
   });
 
   function onSubmit(data: LoginSchemaType) {
-    console.log(data);
+    startTransition(async () => {
+      const result = await signIn(data);
+      if (result.status) {
+        router.push("/");
+        return;
+      }
+      toast.error(result.errors?.message ?? "Invalid credentials.");
+    });
   }
+
+  const isLoading = isPending || isSubmitting;
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border-0">
@@ -76,9 +92,9 @@ export default function LoginForm() {
           <Button
             type="submit"
             className="w-full h-12.5 text-base font-semibold"
-            disabled={isSubmitting}
+            disabled={isLoading}
           >
-            {isSubmitting ? "Signing in…" : "Sign in"}
+            {isLoading ? "Signing in…" : "Sign in"}
           </Button>
           <p className="text-sm text-muted-foreground text-center">
             Don&apos;t have an account?{" "}

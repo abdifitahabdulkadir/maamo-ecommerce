@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "zod": "catalog:",
     "@hookform/resolvers": "^5.4.0",
     "@org/lib": "workspace:*",
     "axios": "^1.17.0",

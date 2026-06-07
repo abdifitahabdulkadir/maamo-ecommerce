@@ -1,3 +1,16 @@
 packages:
   - "lib"
   - "apps/*"
+
+catalog:
+  zod: "^4.4.3"
+onlyBuiltDependencies:
+  - "@nestjs/core"
+  - "@prisma/engines"
+  - "@swc/core"
+  - bcrypt
+  - msw
+  - nx
+  - prisma
+  - sharp
+  - unrs-resolver
