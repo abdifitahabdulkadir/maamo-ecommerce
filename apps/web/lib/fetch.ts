@@ -1,52 +1,48 @@
-import { ActionResponse } from "@org/lib";
-import { HTTP_METHOD } from "next/dist/server/web/http";
-
+import { type ActionResponse } from "@org/lib";
 
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:3001";
 
-type RequestParams<B = unknown> = {
-  url: string;
-  method: HTTP_METHOD;
-  headers?: Record<string, string>;
-  body?: B;
-  params?: Record<string, string>;
-  isMultipart?: boolean;
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+type FetchOptions = {
+  method?: Method;
+  body?: unknown;
+  cookie?: string;
+  cache?: RequestCache;
 };
 
-export async function handleRequest<T = unknown, B = unknown>(
-  options: RequestParams<B>,
+export async function serverFetch<T>(
+  path: string,
+  options: FetchOptions = {},
 ): Promise<ActionResponse<T>> {
-  const { url, method, headers = {}, body, params, isMultipart } = options;
+  const { method = "GET", body, cookie, cache } = options;
 
-  if (!isMultipart) {
-    headers["Content-Type"] = "application/json";
-  }
-
-
-
-  const queryString =
-    params && Object.keys(params).length > 0
-      ? `?${new URLSearchParams(params).toString()}`
-      : "";
-  const fullUrl = `${BASE_URL}${url}${queryString}`;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (cookie) headers["Cookie"] = cookie;
 
   try {
-    const res = await fetch(fullUrl, {
+    const res = await fetch(`${BASE_URL}${path}`, {
       method,
       headers,
-      credentials: "include",
-      body:
-        body === undefined
-          ? undefined
-          : isMultipart
-            ? (body as FormData)
-            : JSON.stringify(body),
+      cache,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     });
 
-    const data: T = await res.json();
-    return { status: true, data };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      const message =
+        json?.message ??
+        json?.errors?.message ??
+        `Request failed (${res.status})`;
+      return { status: false, errors: { message } };
+    }
+
+    return json as ActionResponse<T>;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Network error";
     return { status: false, errors: { message } };
   }
 }
+
+export { BASE_URL };

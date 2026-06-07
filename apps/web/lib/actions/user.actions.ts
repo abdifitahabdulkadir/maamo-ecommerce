@@ -1,36 +1,46 @@
 "use server";
 
-import { type ActionResponse, type LoginSchemaType, type RegisterSchemaType } from "@org/lib";
+import { BASE_URL, serverFetch } from "@/lib/fetch";
+import {
+  type ActionResponse,
+  type LoginSchemaType,
+  type RegisterSchemaType,
+  type SessionUser,
+} from "@org/lib";
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.BASE_URL ?? "http://localhost:3001";
-
-export async function signUp(data: RegisterSchemaType): Promise<ActionResponse<string>> {
-  try {
-    const res = await fetch(`${BASE_URL}/api/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const body = await res.json().catch(() => null);
-      const message = body?.message ?? `Registration failed (${res.status})`;
-      return { status: false, errors: { message } };
-    }
-    return { status: true };
-  } catch (error) {
-    console.log("current Error: ",error)
-    return { status: false, errors: { message: error instanceof Error ? error.message : "Failed to reach the server." } };
-  }
+async function getSessionToken(): Promise<string | null> {
+  const cookieStore = await cookies();
+  return cookieStore.get("session")?.value ?? null;
 }
 
-export async function signIn(data: LoginSchemaType): Promise<ActionResponse<string>> {
+export async function signUp(
+  data: RegisterSchemaType,
+): Promise<ActionResponse<{ userId: string }>> {
+  return serverFetch<{ userId: string }>("/api/auth/signup", {
+    method: "POST",
+    body: data,
+  });
+}
+
+export async function signIn(
+  data: LoginSchemaType,
+): Promise<ActionResponse<string>> {
   try {
     const res = await fetch(`${BASE_URL}/api/auth/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      const message =
+        json?.message ?? json?.errors?.message ?? `Sign in failed (${res.status})`;
+      return { status: false, errors: { message } };
+    }
+
     const setCookieHeader = res.headers.get("set-cookie");
     if (setCookieHeader) {
       const token = setCookieHeader.split(";")[0].split("=")[1];
@@ -42,10 +52,36 @@ export async function signIn(data: LoginSchemaType): Promise<ActionResponse<stri
       });
     }
 
-    return {
-      status:true,
-    }
-  } catch {
-    return { status: false, errors: { message: "Could not reach the server." } };
+    return { status: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not reach the server.";
+    return { status: false, errors: { message } };
   }
+}
+
+export async function getSession(): Promise<ActionResponse<SessionUser>> {
+  const token = await getSessionToken();
+  if (!token) return { status: false, errors: { message: "No session" } };
+
+  return serverFetch<SessionUser>("/api/auth/session", {
+    cookie: `session=${token}`,
+    cache: "no-store",
+  });
+}
+
+export async function signOut(): Promise<ActionResponse<string>> {
+  const token = await getSessionToken();
+  if (!token) return { status: false, errors: { message: "No active session" } };
+
+  const result = await serverFetch<string>("/api/auth/signout", {
+    method: "POST",
+    cookie: `session=${token}`,
+  });
+
+  if (result.status) {
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
+  }
+
+  return result;
 }
