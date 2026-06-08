@@ -12,7 +12,7 @@ export const PRODUCT_CATEGORIES: ("All" | ProductCategory)[] = [
 ];
 
 export const PRODUCTS: Product[] = [
-  // ── Electronics ───────────────────────────────────────────────
+
   {
     id: "1",
     name: "Sony WH-1000XM5 Headphones",

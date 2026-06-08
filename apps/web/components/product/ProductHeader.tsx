@@ -3,8 +3,9 @@
 import { Input } from "@/components/ui/input";
 import { PRODUCT_CATEGORIES } from "@/constants/products";
 import type { ProductCategory } from "@org/lib";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import UserProfile from "../auth/UserProfile";
 
 type Props = {
   search: string;
@@ -35,11 +36,7 @@ export function ProductHeader({
           <span className="text-xl font-bold font-heading text-foreground tracking-tight">
             maamo
           </span>
-          <span className="text-xs text-muted-foreground font-normal self-end mb-0.5">
-            ecommerce
-          </span>
         </Link>
-
         <div className="flex-1 relative">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
@@ -54,12 +51,7 @@ export function ProductHeader({
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-muted transition-colors text-foreground cursor-pointer"
-            aria-label="Account"
-          >
-            <User size={20} />
-          </button>
+          <UserProfile />
           <button
             className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-muted transition-colors text-foreground cursor-pointer"
             aria-label="Cart"
@@ -72,7 +64,7 @@ export function ProductHeader({
         </div>
       </div>
 
-      <nav className="flex items-center gap-1 overflow-x-auto px-6 py-2 max-w-7xl mx-auto w-full [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <nav className="flex items-center gap-1 overflow-x-auto px-6 py-2 max-w-7xl mx-auto w-full scrollbar-none [&::-webkit-scrollbar]:hidden">
         {PRODUCT_CATEGORIES.map((cat) => (
           <button
             key={cat}

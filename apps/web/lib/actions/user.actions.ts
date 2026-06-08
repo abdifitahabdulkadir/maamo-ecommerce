@@ -2,14 +2,14 @@
 
 import { BASE_URL, serverFetch } from "@/lib/fetch";
 import {
-  type ActionResponse,
-  type LoginSchemaType,
-  type RegisterSchemaType,
-  type SessionUser,
+    type ActionResponse,
+    type LoginSchemaType,
+    type RegisterSchemaType,
+    type SessionUser,
 } from "@org/lib";
 import { cookies } from "next/headers";
 
-async function getSessionToken(): Promise<string | null> {
+export async function getSessionToken(): Promise<string | null> {
   const cookieStore = await cookies();
   return cookieStore.get("session")?.value ?? null;
 }

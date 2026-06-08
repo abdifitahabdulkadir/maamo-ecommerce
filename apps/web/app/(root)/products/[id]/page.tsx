@@ -1,4 +1,4 @@
-import { PRODUCTS } from "@/constants/products";
+import { GetProductById, GetRelatedProducts } from "@/lib/actions/prodcut.action";
 import { ArrowLeft, ShieldCheck, Star, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,18 +7,16 @@ import { ViewTransition } from "react";
 
 type Props = { params: Promise<{ id: string }> };
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ id: p.id }));
-}
-
 export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
-  if (!product) notFound();
 
-  const related = PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id,
-  ).slice(0, 4);
+  const productRes = await GetProductById(id);
+  if (!productRes.status || !productRes.data) notFound();
+
+  const product = productRes.data;
+
+  const relatedRes = await GetRelatedProducts(product.category, id);
+  const related = relatedRes.data ?? [];
 
   const discount = product.originalPrice
     ? Math.round(
