@@ -1,11 +1,12 @@
 "use client";
 
+import { ProductGridSkeleton } from "@/components/shared/loaders";
 import { GetAllProducts } from "@/lib/actions/prodcut.action";
 import type { ProductCategory } from "@org/lib";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { ProductCard, ProductCardSkeleton } from "./ProductCard";
+import ProductCard from "./ProductCard";
 import { ProductHeader } from "./ProductHeader";
 
 const SKELETON_COUNT = 8;
@@ -15,10 +16,13 @@ export function ProductView() {
   const searchParams = useSearchParams();
 
   const search = searchParams.get("q") ?? "";
-  const activeCategory = (searchParams.get("category") ?? "All") as "All" | ProductCategory;
+  const activeCategory = (searchParams.get("category") ?? "All") as
+    | "All"
+    | ProductCategory;
   function setSearch(value: string) {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set("q", value); else params.delete("q");
+    if (value) params.set("q", value);
+    else params.delete("q");
     params.delete("scrollY");
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `${pathname}?${qs}` : pathname);
@@ -26,7 +30,8 @@ export function ProductView() {
 
   function setActiveCategory(cat: "All" | ProductCategory) {
     const params = new URLSearchParams(searchParams.toString());
-    if (cat === "All") params.delete("category"); else params.set("category", cat);
+    if (cat === "All") params.delete("category");
+    else params.set("category", cat);
     params.delete("scrollY");
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `${pathname}?${qs}` : pathname);
@@ -50,7 +55,8 @@ export function ProductView() {
   const products = data?.data ?? [];
 
   const filtered = products.filter((p) => {
-    const matchesCat = activeCategory === "All" || p.category === activeCategory;
+    const matchesCat =
+      activeCategory === "All" || p.category === activeCategory;
     const matchesSearch =
       search.trim() === "" ||
       p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -93,11 +99,7 @@ export function ProductView() {
         )}
 
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
+          <ProductGridSkeleton count={SKELETON_COUNT} />
         ) : isError || !data?.status ? (
           <div className="flex items-center justify-center py-32 text-muted-foreground">
             <p>Failed to load products. Please try again.</p>
@@ -109,8 +111,11 @@ export function ProductView() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} onBeforeNavigate={handleBeforeNavigate} />
-
+              <ProductCard
+                key={product.id}
+                product={product}
+                onBeforeNavigate={handleBeforeNavigate}
+              />
             ))}
           </div>
         )}

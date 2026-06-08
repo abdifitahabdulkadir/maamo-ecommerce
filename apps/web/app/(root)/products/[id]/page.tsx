@@ -1,4 +1,7 @@
-import { GetProductById, GetRelatedProducts } from "@/lib/actions/prodcut.action";
+import {
+  GetProductById,
+  GetRelatedProducts,
+} from "@/lib/actions/prodcut.action";
 import { ArrowLeft, ShieldCheck, Star, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +41,11 @@ export default async function ProductDetailPage({ params }: Props) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted ring-1 ring-foreground/10">
-          <ViewTransition name={`product-img-${product.id}`} share="morph" default="none">
+          <ViewTransition
+            name={`product-img-${product.id}`}
+            share="morph"
+            default="none"
+          >
             <Image
               src={product.image}
               alt={product.name}
@@ -123,7 +130,9 @@ export default async function ProductDetailPage({ params }: Props) {
                 </button>
               </>
             ) : (
-              <p className="text-muted-foreground text-sm font-medium">Currently out of stock</p>
+              <p className="text-muted-foreground text-sm font-medium">
+                Currently out of stock
+              </p>
             )}
           </div>
         </div>
@@ -131,7 +140,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
       {related.length > 0 && (
         <section className="border-t border-border pt-10">
-          <h2 className="text-xl font-bold font-heading mb-6">More in {product.category}</h2>
+          <h2 className="text-xl font-bold font-heading mb-6">
+            More in {product.category}
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {related.map((p) => (
               <Link
@@ -140,7 +151,11 @@ export default async function ProductDetailPage({ params }: Props) {
                 className="group flex flex-col gap-2 text-foreground no-underline"
               >
                 <div className="relative aspect-square rounded-xl overflow-hidden bg-muted ring-1 ring-foreground/10 transition-all group-hover:ring-primary/40">
-                  <ViewTransition name={`product-img-${p.id}`} share="morph" default="none">
+                  <ViewTransition
+                    name={`product-img-${p.id}`}
+                    share="morph"
+                    default="none"
+                  >
                     <Image
                       src={p.image}
                       alt={p.name}
@@ -153,7 +168,9 @@ export default async function ProductDetailPage({ params }: Props) {
                 <p className="text-sm font-semibold leading-snug line-clamp-2 font-heading">
                   {p.name}
                 </p>
-                <p className="text-sm font-bold text-primary">${p.price.toFixed(2)}</p>
+                <p className="text-sm font-bold text-primary">
+                  ${p.price.toFixed(2)}
+                </p>
               </Link>
             ))}
           </div>

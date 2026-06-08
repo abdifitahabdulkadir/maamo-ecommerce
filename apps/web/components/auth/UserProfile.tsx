@@ -1,8 +1,8 @@
 import { getSession } from "@/lib/actions/user.actions";
+import { UserProfileSkeleton } from "@/components/shared/loaders";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Skeleton } from "../ui/skeleton";
 
 export default function UserProfile() {
   const { data, isLoading } = useQuery({
@@ -11,12 +11,7 @@ export default function UserProfile() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-4 w-24" />
-      </div>
-    );
+    return <UserProfileSkeleton />;
   }
 
   const user = data?.data;

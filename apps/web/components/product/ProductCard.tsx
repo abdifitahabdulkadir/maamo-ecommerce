@@ -1,13 +1,12 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import type { Product } from "@org/lib";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
 
-export function ProductCard({
+export default function ProductCard({
   product,
   onBeforeNavigate,
 }: {
@@ -87,23 +86,5 @@ export function ProductCard({
         </div>
       </div>
     </Link>
-  );
-}
-
-export function ProductCardSkeleton() {
-  return (
-    <div className="flex flex-col rounded-2xl overflow-hidden bg-card ring-1 ring-foreground/10">
-      <Skeleton className="aspect-square w-full rounded-none" />
-      <div className="flex flex-col gap-2 p-3 flex-1">
-        <Skeleton className="h-3 w-16" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-24 mt-0.5" />
-        <div className="flex items-center gap-2 mt-auto pt-2">
-          <Skeleton className="h-5 w-16" />
-          <Skeleton className="h-3 w-10" />
-        </div>
-      </div>
-    </div>
   );
 }
