@@ -1,3 +1,5 @@
+import { ShopView } from "@/components/shop/shop-view";
+
 export default function Home() {
-  return <main>Hello world!!</main>;
+  return <ShopView />;
 }

@@ -18,3 +18,26 @@ export type SessionUser = {
 export enum AuthProviderID {
   credentail
 }
+
+export type ProductCategory =
+  | "Electronics"
+  | "Clothing"
+  | "Home & Kitchen"
+  | "Sports"
+  | "Beauty"
+  | "Books"
+  | "Furniture";
+
+export type Product = {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  category: ProductCategory;
+  description: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  inStock: boolean;
+  badge?: string;
+};

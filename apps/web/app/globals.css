@@ -93,3 +93,383 @@
     @apply font-mono;
   }
 }
+
+/* ─── Shop Layout ─────────────────────────────────────────────── */
+.shop-root {
+  @apply min-h-screen flex flex-col bg-background;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.shop-header {
+  @apply sticky top-0 z-50 bg-white border-b border-border shadow-sm;
+}
+
+.shop-header-top {
+  @apply flex items-center gap-4 px-6 py-4 max-w-7xl mx-auto w-full;
+}
+
+.shop-logo {
+  @apply flex items-center gap-2 shrink-0;
+  text-decoration: none;
+}
+
+.shop-logo-icon {
+  @apply flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-primary-foreground text-lg font-bold font-heading;
+}
+
+.shop-logo-text {
+  @apply text-xl font-bold font-heading text-foreground tracking-tight;
+}
+
+.shop-logo-sub {
+  @apply text-xs text-muted-foreground font-normal self-end mb-0.5;
+}
+
+.shop-search-wrap {
+  @apply flex-1 relative;
+}
+
+.shop-search-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none;
+}
+
+.shop-search-input {
+  @apply pl-10 h-10 rounded-full border-border bg-muted/40 focus:bg-white w-full;
+}
+
+.shop-header-actions {
+  @apply flex items-center gap-2 shrink-0;
+}
+
+.shop-icon-btn {
+  @apply relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-muted transition-colors text-foreground cursor-pointer;
+}
+
+.shop-cart-badge {
+  @apply absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold;
+}
+
+.shop-categories {
+  @apply flex items-center gap-1 overflow-x-auto px-6 py-2 max-w-7xl mx-auto w-full;
+  scrollbar-width: none;
+}
+.shop-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.shop-cat-btn {
+  @apply shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all cursor-pointer border border-transparent text-muted-foreground hover:text-foreground hover:bg-muted;
+}
+
+.shop-cat-btn--active {
+  @apply bg-primary text-primary-foreground border-primary hover:bg-primary hover:text-primary-foreground;
+}
+
+/* ─── Main / Grid ─────────────────────────────────────────────── */
+.shop-main {
+  @apply flex-1 max-w-7xl mx-auto w-full px-6 py-8;
+}
+
+.shop-results-bar {
+  @apply flex items-center justify-between mb-6;
+}
+
+.shop-results-count {
+  @apply text-sm text-muted-foreground;
+}
+
+.shop-clear-btn {
+  @apply text-sm text-primary hover:underline cursor-pointer;
+}
+
+.shop-empty {
+  @apply flex items-center justify-center py-32 text-muted-foreground;
+}
+
+.shop-grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5;
+}
+
+/* ─── Product Card ────────────────────────────────────────────── */
+.product-card {
+  @apply flex flex-col rounded-2xl overflow-hidden bg-card ring-1 ring-foreground/10 transition-all duration-200 text-foreground;
+  text-decoration: none;
+}
+.product-card:hover {
+  @apply shadow-lg;
+  --tw-ring-color: color-mix(in oklch, var(--primary) 40%, transparent);
+}
+
+.product-card-img-wrap {
+  @apply relative aspect-square overflow-hidden bg-muted;
+}
+
+.product-card-img {
+  @apply object-cover transition-transform duration-300;
+}
+.product-card:hover .product-card-img {
+  transform: scale(1.05);
+}
+
+.product-card-badge {
+  @apply absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full z-10 uppercase tracking-wide;
+}
+
+.product-card-discount {
+  @apply absolute top-2 right-2 bg-destructive text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10;
+}
+
+.product-card-oos {
+  @apply absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm font-semibold;
+}
+
+.product-card-body {
+  @apply flex flex-col gap-1 p-3 flex-1;
+}
+
+.product-card-category {
+  @apply text-[11px] uppercase tracking-widest text-muted-foreground font-medium;
+}
+
+.product-card-name {
+  @apply text-sm font-semibold text-foreground leading-snug line-clamp-2 font-heading;
+}
+
+.product-card-rating {
+  @apply flex items-center gap-1 mt-0.5;
+}
+
+.product-card-star {
+  @apply fill-amber-400 text-amber-400;
+}
+
+.product-card-rating-val {
+  @apply text-xs font-semibold text-foreground;
+}
+
+.product-card-review-count {
+  @apply text-xs text-muted-foreground;
+}
+
+.product-card-price-row {
+  @apply flex items-baseline gap-2 mt-auto pt-2;
+}
+
+.product-card-price {
+  @apply text-base font-bold text-primary;
+}
+
+.product-card-original-price {
+  @apply text-xs text-muted-foreground line-through;
+}
+
+/* ─── Product Detail Page ─────────────────────────────────────── */
+.detail-root {
+  @apply max-w-7xl mx-auto px-6 py-8;
+}
+
+.detail-back-wrap {
+  @apply mb-6;
+}
+
+.detail-back-link {
+  @apply inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors;
+  text-decoration: none;
+}
+
+.detail-hero {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-10 mb-16;
+}
+
+.detail-img-wrap {
+  @apply relative aspect-square rounded-2xl overflow-hidden bg-muted ring-1 ring-foreground/10;
+}
+
+.detail-img {
+  @apply object-cover;
+}
+
+.detail-info {
+  @apply flex flex-col gap-4;
+}
+
+.detail-category {
+  @apply text-xs uppercase tracking-widest text-muted-foreground font-medium;
+}
+
+.detail-title {
+  @apply text-2xl md:text-3xl font-bold font-heading text-foreground leading-tight;
+}
+
+.detail-rating {
+  @apply flex items-center gap-1;
+}
+
+.detail-star--filled {
+  @apply fill-amber-400 text-amber-400;
+}
+
+.detail-star--empty {
+  @apply fill-muted text-muted-foreground;
+}
+
+.detail-rating-val {
+  @apply text-sm font-semibold ml-1;
+}
+
+.detail-review-count {
+  @apply text-sm text-muted-foreground;
+}
+
+.detail-price-row {
+  @apply flex items-baseline gap-3;
+}
+
+.detail-price {
+  @apply text-3xl font-bold text-primary;
+}
+
+.detail-original-price {
+  @apply text-lg text-muted-foreground line-through;
+}
+
+.detail-discount-badge {
+  @apply bg-destructive text-white text-xs font-bold px-2 py-0.5 rounded-full;
+}
+
+.detail-description {
+  @apply text-sm text-muted-foreground leading-relaxed;
+}
+
+.detail-perks {
+  @apply flex flex-col gap-2 py-4 border-y border-border;
+}
+
+.detail-perk {
+  @apply flex items-center gap-2 text-sm text-foreground;
+}
+
+.detail-perk svg {
+  @apply text-primary shrink-0;
+}
+
+.detail-actions {
+  @apply flex gap-3 flex-wrap;
+}
+
+.detail-add-btn {
+  @apply flex-1 min-w-[140px] h-12 rounded-full bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity cursor-pointer;
+}
+
+.detail-buy-btn {
+  @apply flex-1 min-w-[140px] h-12 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary/10 transition-colors cursor-pointer;
+}
+
+.detail-oos-msg {
+  @apply text-muted-foreground text-sm font-medium;
+}
+
+/* ─── Related products ───────────────────────────────────────── */
+.detail-related {
+  @apply border-t border-border pt-10;
+}
+
+.detail-related-title {
+  @apply text-xl font-bold font-heading mb-6;
+}
+
+.detail-related-grid {
+  @apply grid grid-cols-2 sm:grid-cols-4 gap-4;
+}
+
+.detail-related-card {
+  @apply flex flex-col gap-2 text-foreground;
+  text-decoration: none;
+}
+
+.detail-related-img-wrap {
+  @apply relative aspect-square rounded-xl overflow-hidden bg-muted ring-1 ring-foreground/10 transition-all;
+}
+.detail-related-card:hover .detail-related-img-wrap {
+  @apply ring-primary/40;
+}
+
+.detail-related-name {
+  @apply text-sm font-semibold leading-snug line-clamp-2 font-heading;
+}
+
+.detail-related-price {
+  @apply text-sm font-bold text-primary;
+}
+
+/* ─── View Transitions ──────────────────────────────────────── */
+
+/* Anchor the shop header so it never slides */
+::view-transition-group(shop-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(shop-header) {
+  display: none;
+}
+::view-transition-new(shop-header) {
+  animation: none;
+}
+
+/* Keyframes */
+:root {
+  --vt-exit-duration: 150ms;
+  --vt-enter-duration: 300ms;
+}
+
+@keyframes vt-fade {
+  from { opacity: 0; filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes vt-slide {
+  from { translate: var(--vt-slide-offset, 48px); }
+  to   { translate: 0; }
+}
+
+/* Forward navigation: old exits left, new enters from right */
+::view-transition-old(.nav-forward) {
+  --vt-slide-offset: -48px;
+  animation:
+    var(--vt-exit-duration) ease-in both vt-fade reverse,
+    var(--vt-exit-duration) ease-in-out both vt-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --vt-slide-offset: 48px;
+  animation:
+    var(--vt-enter-duration) ease-out var(--vt-exit-duration) both vt-fade,
+    var(--vt-enter-duration) cubic-bezier(0.22, 1, 0.36, 1) both vt-slide;
+}
+
+/* Back navigation: old exits right, new enters from left */
+::view-transition-old(.nav-back) {
+  --vt-slide-offset: 48px;
+  animation:
+    var(--vt-exit-duration) ease-in both vt-fade reverse,
+    var(--vt-exit-duration) ease-in-out both vt-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --vt-slide-offset: -48px;
+  animation:
+    var(--vt-enter-duration) ease-out var(--vt-exit-duration) both vt-fade,
+    var(--vt-enter-duration) cubic-bezier(0.22, 1, 0.36, 1) both vt-slide;
+}
+
+/* Shared product image morph */
+::view-transition-image-pair(.morph) {
+  animation-duration: 400ms;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
