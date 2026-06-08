@@ -1,5 +1,5 @@
-import { ShopView } from "@/components/shop/shop-view";
+import { ProductView } from "@/components/product/ProductView";
 
 export default function Home() {
-  return <ShopView />;
+  return <ProductView />;
 }

@@ -3,17 +3,18 @@
 import { PRODUCTS } from "@/constants/products";
 import type { ProductCategory } from "@org/lib";
 import { useState } from "react";
-import { ProductCard } from "./product-card";
-import { ShopHeader } from "./shop-header";
+import { ProductCard } from "./ProductCard";
+import { ProductHeader } from "./ProductHeader";
 
-export function ShopView() {
+export function ProductView() {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState<
-    "All" | ProductCategory
-  >("All");
+  const [activeCategory, setActiveCategory] = useState<"All" | ProductCategory>(
+    "All",
+  );
 
   const filtered = PRODUCTS.filter((p) => {
-    const matchesCat = activeCategory === "All" || p.category === activeCategory;
+    const matchesCat =
+      activeCategory === "All" || p.category === activeCategory;
     const matchesSearch =
       search.trim() === "" ||
       p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -22,22 +23,22 @@ export function ShopView() {
   });
 
   return (
-    <div className="shop-root">
-      <ShopHeader
+    <div className="min-h-screen flex flex-col bg-background">
+      <ProductHeader
         search={search}
         onSearchChange={setSearch}
         activeCategory={activeCategory}
         onCategoryChange={setActiveCategory}
       />
 
-      <main className="shop-main">
-        <div className="shop-results-bar">
-          <span className="shop-results-count">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <span className="text-sm text-muted-foreground">
             {filtered.length} product{filtered.length !== 1 ? "s" : ""}
           </span>
           {(search || activeCategory !== "All") && (
             <button
-              className="shop-clear-btn"
+              className="text-sm text-primary hover:underline cursor-pointer"
               onClick={() => {
                 setSearch("");
                 setActiveCategory("All");
@@ -49,11 +50,11 @@ export function ShopView() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="shop-empty">
+          <div className="flex items-center justify-center py-32 text-muted-foreground">
             <p>No products found. Try a different search or category.</p>
           </div>
         ) : (
-          <div className="shop-grid">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
