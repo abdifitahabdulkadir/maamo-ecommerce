@@ -60,3 +60,20 @@ model Account {
   @@index([userId])
   @@map("accounts")
 }
+
+
+model Product {
+  id            String  @id @default(uuid())
+  name          String
+  price         Float
+  originalPrice Float?
+  category      String
+  description   String
+  image         String
+  rating        Float
+  reviewCount   Float
+  inStock       Boolean
+  badge         String?
+
+  @@map("products")
+}

@@ -7,6 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+
 import { type Request, type Response } from 'express';
 import type { User } from 'prisma/generated/client.js';
 import { type CreateUserDTO } from 'src/dtos/user.dto.js';

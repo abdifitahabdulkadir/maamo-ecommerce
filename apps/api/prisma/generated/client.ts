@@ -56,3 +56,8 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type Account = Prisma.AccountModel
+/**
+ * Model Product
+ * 
+ */
+export type Product = Prisma.ProductModel
