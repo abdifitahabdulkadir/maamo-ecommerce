@@ -28,7 +28,7 @@ export function ProductView() {
 
   return (
     <div className="min-h-screen px-4 flex flex-col bg-background">
-      <div className="w-full gap-5 h-fit grid grid-cols-[2fr_1fr]">
+      <div className="w-full grid grid-cols-1 md:gap-5 place-items-center h-fit md:grid-cols-[1fr_3fr] xl:grid-cols-[2fr_1fr]">
         <Categories />
         <div className="h-fit py-4 isolate w-full relative">
           <Search

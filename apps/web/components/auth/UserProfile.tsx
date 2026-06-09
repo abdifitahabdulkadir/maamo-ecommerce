@@ -1,5 +1,5 @@
-import { getSession } from "@/lib/actions/user.actions";
 import { UserProfileSkeleton } from "@/components/shared/loaders";
+import { getSession } from "@/lib/actions/user.actions";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -23,7 +23,11 @@ export default function UserProfile() {
           <User className="h-4 w-4" />
         </AvatarFallback>
       </Avatar>
-      {user?.name && <span className="text-sm font-medium">{user.name}</span>}
+      {user?.name && (
+        <span className="text-sm hidden sm:inline-block font-medium">
+          {user.name}
+        </span>
+      )}
     </div>
   );
 }
