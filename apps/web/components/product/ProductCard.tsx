@@ -6,13 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
 
-export default function ProductCard({
-  product,
-  onBeforeNavigate,
-}: {
-  product: Product;
-  onBeforeNavigate?: () => void;
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   const discount = product.originalPrice
     ? Math.round(
         ((product.originalPrice - product.price) / product.originalPrice) * 100,
@@ -22,7 +16,6 @@ export default function ProductCard({
   return (
     <Link
       href={`/products/${product.id}`}
-      onClick={onBeforeNavigate}
       className="group flex flex-col rounded-2xl overflow-hidden bg-card ring-1 ring-foreground/10 transition-all duration-200 text-foreground no-underline hover:shadow-lg hover:ring-primary/40"
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
