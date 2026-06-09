@@ -2,17 +2,22 @@
 
 import { ProductGridSkeleton } from "@/components/shared/loaders";
 import { GetAllProducts } from "@/lib/actions/prodcut.action";
+import { useDebouncedValue } from "@tanstack/react-pacer";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import Categories from "./Categories";
 import ProductCard from "./ProductCard";
 
 export function ProductView() {
   const searchParams = useSearchParams();
-
   const search = searchParams.get("category") ?? "";
+  const [searchTerm, setSearchTerm] = useState(search);
+  const [debouncedTerm] = useDebouncedValue(searchTerm, {
+    wait: 1500,
+  });
 
   const { isLoading, data, isError } = useQuery({
     queryKey: ["products"],
@@ -20,16 +25,6 @@ export function ProductView() {
   });
 
   const products = data?.data ?? [];
-
-  // const filtered = products.filter((p) => {
-  //   const matchesCat =
-  //     activeCategory === "All" || p.category === activeCategory;
-  //   const matchesSearch =
-  //     search.trim() === "" ||
-  //     p.name.toLowerCase().includes(search.toLowerCase()) ||
-  //     p.category.toLowerCase().includes(search.toLowerCase());
-  //   return matchesCat && matchesSearch;
-  // });
 
   return (
     <div className="min-h-screen px-4 flex flex-col bg-background">
@@ -43,7 +38,8 @@ export function ProductView() {
           <Input
             className="pl-10 h-10 rounded-full border-border bg-muted/40 focus:bg-white w-full"
             placeholder="Search products…"
-            value={search}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
