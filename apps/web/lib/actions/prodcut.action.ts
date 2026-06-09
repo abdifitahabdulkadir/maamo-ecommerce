@@ -1,17 +1,22 @@
 "use server";
-import { ActionResponse, Product } from "@org/lib";
+import { ActionResponse, PaginatedProducts, Product } from "@org/lib";
 import { serverFetch } from "../fetch";
 import { getSessionToken } from "./user.actions";
 
-export async function GetAllProducts(): Promise<ActionResponse<Product[]>> {
+export async function GetAllProducts({
+  pageParam = 1,
+}: { pageParam?: number } = {}): Promise<ActionResponse<PaginatedProducts>> {
   try {
     const token = await getSessionToken();
-    const result = await serverFetch<Product[]>("/api/products", {
+    const params = new URLSearchParams({ page: String(pageParam), limit: "20" });
+    const result = await serverFetch<PaginatedProducts>(`/api/products?${params}`, {
       method: "GET",
       cookie: `session=${token}`,
     });
+
     return { status: true, data: result.data };
   } catch (error) {
+    console.log(error)
     return {
       status: false,
       errors: { message: error instanceof Error ? error.message : "Failed to load Products" },

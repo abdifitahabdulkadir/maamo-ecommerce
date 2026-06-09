@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionResponse } from '@org/lib';
+import { ActionResponse, PaginatedProducts, Product } from '@org/lib';
 import { DatabaseService } from 'src/database/database.service.js';
 import { ProductDTO } from 'src/dtos/product.dto.js';
 
@@ -7,12 +7,26 @@ import { ProductDTO } from 'src/dtos/product.dto.js';
 export class ProductsService {
   constructor(private readonly db: DatabaseService) {}
 
-  async getAllProducts(): Promise<ActionResponse<ProductDTO[]>> {
+  async getAllProducts(
+    page = 1,
+    limit = 20,
+  ): Promise<ActionResponse<PaginatedProducts>> {
     try {
-      const products = await this.db.product.findMany();
+      const skip = (page - 1) * limit;
+      const [items, total] = await this.db.$transaction([
+        this.db.product.findMany({ skip, take: limit, orderBy: { id: 'asc' } }),
+        this.db.product.count(),
+      ]);
+      const totalPages = Math.ceil(total / limit);
+
       return {
         status: true,
-        data: products,
+        data: {
+          products: items as unknown as Product[],
+          page,
+          totalPages,
+          hasNextPage: page < totalPages,
+        },
       };
     } catch (error) {
       return {

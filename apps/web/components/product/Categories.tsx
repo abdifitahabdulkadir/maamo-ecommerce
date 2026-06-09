@@ -10,7 +10,10 @@ import { updateQueryParams } from "@/lib/utils";
 import { ProductCategory } from "@org/lib";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Categories() {
+interface Props {
+  disabled?: boolean;
+}
+export default function Categories({ disabled }: Props) {
   const searchParams = useSearchParams();
   const activeCategory = (searchParams.get("category") ?? "All") as
     | "All"
@@ -30,13 +33,17 @@ export default function Categories() {
   return (
     <>
       <div className="flex xl:hidden w-full">
-        <Select value={activeCategory} onValueChange={handleCategory}>
+        <Select
+          disabled={disabled}
+          value={activeCategory}
+          onValueChange={handleCategory}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
             {PRODUCT_CATEGORIES.map((cat, index) => (
-              <SelectItem key={index} value={cat}>
+              <SelectItem disabled={disabled} key={index} value={cat}>
                 {cat}
               </SelectItem>
             ))}
@@ -47,6 +54,7 @@ export default function Categories() {
       <nav className="hidden xl:flex flex-1 items-center gap-1 overflow-x-auto w-full scrollbar-none [&::-webkit-scrollbar]:hidden">
         {PRODUCT_CATEGORIES.map((cat, index) => (
           <button
+            disabled={disabled}
             key={index}
             onClick={() => handleCategory(cat)}
             className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all cursor-pointer border ${

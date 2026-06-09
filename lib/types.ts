@@ -32,7 +32,7 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  originalPrice?: number;
+  originalPrice: number | null;
   category: ProductCategory;
   description: string;
   image: string;
@@ -40,4 +40,11 @@ export type Product = {
   reviewCount: number;
   inStock: boolean;
   badge?: string;
+};
+
+export type PaginatedProducts = {
+  products: Product[];
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
 };

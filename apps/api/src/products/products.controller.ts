@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { SessionAuthGuard } from 'src/auth/guards/session-auth.guard.js';
 import { ProductsService } from './products.service.js';
 
@@ -8,8 +15,14 @@ export class ProductsController {
 
   @UseGuards(SessionAuthGuard)
   @Get('/')
-  async getProdcuts() {
-    return await this.productService.getAllProducts();
+  async getProdcuts(
+    @Query('page', ParseIntPipe) page?: number,
+    @Query('limit', ParseIntPipe) limit?: number,
+  ) {
+    return await this.productService.getAllProducts(
+      page ? page : 1,
+      limit ? limit : 20,
+    );
   }
 
   @UseGuards(SessionAuthGuard)
