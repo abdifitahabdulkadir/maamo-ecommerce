@@ -290,6 +290,7 @@ export type ProductOrderByWithRelationInput = {
   reviewCount?: Prisma.SortOrder
   inStock?: Prisma.SortOrder
   badge?: Prisma.SortOrderInput | Prisma.SortOrder
+  _relevance?: Prisma.ProductOrderByRelevanceInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -441,6 +442,12 @@ export type ProductUncheckedUpdateManyInput = {
   reviewCount?: Prisma.FloatFieldUpdateOperationsInput | number
   inStock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ProductOrderByRelevanceInput = {
+  fields: Prisma.ProductOrderByRelevanceFieldEnum | Prisma.ProductOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ProductCountOrderByAggregateInput = {

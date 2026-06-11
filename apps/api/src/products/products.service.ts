@@ -16,27 +16,37 @@ export class ProductsService {
     try {
       const skip = (page - 1) * limit;
       const where = {
-        ...(category && category.toLowerCase() !== 'all' ? { category } : {}),
-        ...(search
-          ? {
-              OR: [
-                { name: { contains: search, mode: 'insensitive' as const } },
+        AND: [
+          ...(category && category.toLowerCase() !== 'all'
+            ? [{ category }]
+            : []),
+          ...(search
+            ? [
                 {
-                  description: {
-                    contains: search,
-                    mode: 'insensitive' as const,
-                  },
+                  name: { search },
+                  category: { search },
+                  description: { search },
                 },
-              ],
-            }
-          : {}),
+              ]
+            : []),
+        ],
       };
       const [items, total] = await this.db.$transaction([
         this.db.product.findMany({
           where,
           skip,
           take: limit,
-          orderBy: { id: 'asc' },
+          ...(search
+            ? {
+                orderBy: {
+                  _relevance: {
+                    fields: ['name', 'description', 'category'] as const,
+                    search,
+                    sort: 'asc' as const,
+                  },
+                },
+              }
+            : {}),
         }),
         this.db.product.count({ where }),
       ]);
