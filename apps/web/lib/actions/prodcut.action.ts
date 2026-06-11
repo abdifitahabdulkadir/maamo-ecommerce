@@ -1,17 +1,14 @@
 "use server";
 import { ActionResponse, PaginatedProducts, Product } from "@org/lib";
 import { serverFetch } from "../fetch";
-import { getSessionToken } from "./user.actions";
 
 export async function GetAllProducts({
   pageParam = 1,
 }: { pageParam?: number } = {}): Promise<ActionResponse<PaginatedProducts>> {
   try {
-    const token = await getSessionToken();
     const params = new URLSearchParams({ page: String(pageParam), limit: "20" });
     const result = await serverFetch<PaginatedProducts>(`/api/products?${params}`, {
       method: "GET",
-      cookie: `session=${token}`,
     });
 
     return { status: true, data: result.data };
@@ -26,10 +23,8 @@ export async function GetAllProducts({
 
 export async function GetProductById(id: string): Promise<ActionResponse<Product>> {
   try {
-    const token = await getSessionToken();
     const result = await serverFetch<Product>(`/api/products/${id}`, {
       method: "GET",
-      cookie: `session=${token}`,
     });
     return { status: result.status, data: result.data, errors: result.errors };
   } catch (error) {
@@ -45,11 +40,9 @@ export async function GetRelatedProducts(
   excludeId: string,
 ): Promise<ActionResponse<Product[]>> {
   try {
-    const token = await getSessionToken();
     const params = new URLSearchParams({ category, excludeId });
     const result = await serverFetch<Product[]>(`/api/products/related?${params}`, {
       method: "GET",
-      cookie: `session=${token}`,
     });
     return { status: result.status, data: result.data, errors: result.errors };
   } catch (error) {

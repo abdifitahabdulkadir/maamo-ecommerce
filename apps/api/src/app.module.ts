@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module.js';
         return z
           .object({
             DATABASE_URL: z.string().min(1, 'Database Url is required'),
+            WEB_ORIGIN: z.string().min(1, 'Web origin is required'),
           })
           .parse(result);
       },

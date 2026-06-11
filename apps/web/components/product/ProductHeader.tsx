@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import UserLogout from "../auth/UserLogout";
 import UserProfile from "../auth/UserProfile";
 import ProductCart from "./ProductCart";
 
@@ -22,6 +23,7 @@ export function ProductHeader() {
       <div className="flex items-center gap-2 shrink-0">
         <UserProfile />
         <ProductCart />
+        <UserLogout />
       </div>
     </header>
   );
