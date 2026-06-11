@@ -13,7 +13,6 @@ export async function GetAllProducts({
 
     return { status: true, data: result.data };
   } catch (error) {
-    console.log(error)
     return {
       status: false,
       errors: { message: error instanceof Error ? error.message : "Failed to load Products" },

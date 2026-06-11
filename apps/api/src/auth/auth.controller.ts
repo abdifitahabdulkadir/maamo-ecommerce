@@ -1,11 +1,11 @@
 import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
+    Body,
+    Controller,
+    Get,
+    Post,
+    Req,
+    Res,
+    UseGuards,
 } from '@nestjs/common';
 
 import { type Request, type Response } from 'express';
@@ -31,7 +31,6 @@ export class AuthController {
 
   @Post('/signup')
   async signUp(@Body() user: CreateUserDTO) {
-    console.log(user);
     return await this.authService.signUp(user);
   }
 

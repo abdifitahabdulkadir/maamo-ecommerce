@@ -6,8 +6,6 @@ import { UsersService } from 'src/users/users.service.js';
 import { parseError } from 'src/utilities/utils.js';
 import { v4 as uuid } from 'uuid';
 
-const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-
 @Injectable()
 export class TokenService {
   constructor(private readonly usersService: UsersService) {}
@@ -18,7 +16,8 @@ export class TokenService {
   ): Promise<ActionResponse<string>> {
     try {
       const token = uuid();
-      const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+      const sessionDuration = process.env.SESSION_DURATION_IN_MLS!;
+      const expiresAt = new Date(Date.now() + Number(sessionDuration));
       const req = response.req as Request;
 
       const sessionResult = await this.usersService.createSession({

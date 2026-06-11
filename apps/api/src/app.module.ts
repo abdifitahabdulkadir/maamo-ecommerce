@@ -17,6 +17,9 @@ import { UsersModule } from './users/users.module.js';
           .object({
             DATABASE_URL: z.string().min(1, 'Database Url is required'),
             WEB_ORIGIN: z.string().min(1, 'Web origin is required'),
+            SESSION_DURATION_IN_MLS: z
+              .string()
+              .min(1, 'Session Duration is missing'),
           })
           .parse(result);
       },
