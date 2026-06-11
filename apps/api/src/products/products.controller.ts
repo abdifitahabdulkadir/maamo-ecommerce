@@ -18,10 +18,14 @@ export class ProductsController {
   async getProdcuts(
     @Query('page', ParseIntPipe) page?: number,
     @Query('limit', ParseIntPipe) limit?: number,
+    @Query('search') search?: string,
+    @Query('category') category?: string,
   ) {
     return await this.productService.getAllProducts(
       page ? page : 1,
       limit ? limit : 20,
+      search,
+      category,
     );
   }
 

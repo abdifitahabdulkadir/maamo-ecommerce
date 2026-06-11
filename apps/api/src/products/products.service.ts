@@ -10,12 +10,35 @@ export class ProductsService {
   async getAllProducts(
     page = 1,
     limit = 20,
+    search?: string,
+    category?: string,
   ): Promise<ActionResponse<PaginatedProducts>> {
     try {
       const skip = (page - 1) * limit;
+      const where = {
+        ...(category && category.toLowerCase() !== 'all' ? { category } : {}),
+        ...(search
+          ? {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' as const } },
+                {
+                  description: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              ],
+            }
+          : {}),
+      };
       const [items, total] = await this.db.$transaction([
-        this.db.product.findMany({ skip, take: limit, orderBy: { id: 'asc' } }),
-        this.db.product.count(),
+        this.db.product.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { id: 'asc' },
+        }),
+        this.db.product.count({ where }),
       ]);
       const totalPages = Math.ceil(total / limit);
 

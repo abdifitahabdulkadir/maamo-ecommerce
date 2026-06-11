@@ -1,12 +1,17 @@
 "use server";
-import { ActionResponse, PaginatedProducts, Product } from "@org/lib";
+import { ActionResponse, PaginatedProducts, Product, ProductsQuery } from "@org/lib";
 import { serverFetch } from "../fetch";
 
 export async function GetAllProducts({
-  pageParam = 1,
-}: { pageParam?: number } = {}): Promise<ActionResponse<PaginatedProducts>> {
+  page = 1,
+  limit = 20,
+  search = "",
+  category = "",
+}: ProductsQuery = {}): Promise<ActionResponse<PaginatedProducts>> {
   try {
-    const params = new URLSearchParams({ page: String(pageParam), limit: "20" });
+    const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+    if (search) params.set("search", search);
+    if (category) params.set("category", category);
     const result = await serverFetch<PaginatedProducts>(`/api/products?${params}`, {
       method: "GET",
     });

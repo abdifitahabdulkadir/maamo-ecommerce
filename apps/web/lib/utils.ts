@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import type { Route } from "next";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -6,9 +7,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export function updateQueryParams(params: Record<string, string>) {
-  const searchPrams = new URLSearchParams(params);
-  return `${window.location.pathname}?${searchPrams.toString()}`
+export function updateQueryParams(params: Record<string, string>): Route {
+  const searchParams = new URLSearchParams(window.location.search);
+  for (const [key, value] of Object.entries(params)) {
+    if (value) searchParams.set(key, value);
+    else searchParams.delete(key);
+  }
+  const query = searchParams.toString();
+  return (
+    query ? `${window.location.pathname}?${query}` : window.location.pathname
+  ) as Route;
 }
 
 

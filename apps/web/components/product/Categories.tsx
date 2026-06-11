@@ -8,6 +8,7 @@ import {
 import { PRODUCT_CATEGORIES } from "@/constants/products";
 import { updateQueryParams } from "@/lib/utils";
 import { ProductCategory } from "@org/lib";
+import { Route } from "next";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
@@ -24,7 +25,8 @@ export default function Categories({ disabled }: Props) {
   function handleCategory(category: string) {
     const newUrl = updateQueryParams({
       category,
-    });
+      page: "",
+    }) as Route;
     router.push(newUrl, {
       scroll: false,
     });
