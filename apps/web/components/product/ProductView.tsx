@@ -32,12 +32,10 @@ export function ProductView() {
     fetchPreviousPage,
     isError,
     hasNextPage,
-    hasPreviousPage,
     isFetchingPreviousPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["products", currentPage],
-
+    queryKey: ["products"],
     queryFn: ({ pageParam }) => GetAllProducts({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
@@ -54,10 +52,9 @@ export function ProductView() {
   const isPageLoading =
     isLoading || isFetchingNextPage || isFetchingPreviousPage;
 
-  console.log(hasPreviousPage, currentPage, totalPages);
   return (
     <div className="min-h-screen px-4 flex flex-col bg-background">
-      <div className="w-full grid grid-cols-1 md:gap-5 place-items-center h-fit md:grid-cols-[1fr_3fr] xl:grid-cols-[2fr_1fr]">
+      <div className="w-full isolate sticky top-(--header-height) z-40 bg-background grid grid-cols-1 md:gap-5 place-items-center h-fit md:grid-cols-[1fr_3fr] xl:grid-cols-[2fr_1fr]">
         <Categories disabled={isPageLoading} />
         <div className="h-fit py-4 isolate w-full relative">
           <Search

@@ -8,7 +8,7 @@ import ProductCart from "./ProductCart";
 export function ProductHeader() {
   return (
     <header
-      className="sticky top-0 py-4 px-6 z-50 w-full bg-white  border-b flex itce justify-between border-border shadow-sm"
+      className="sticky top-0 h-(--header-height) px-6 z-50 w-full bg-white border-b flex items-center justify-between border-border shadow-sm"
       style={{ viewTransitionName: "shop-header" } as React.CSSProperties}
     >
       <Link href="/" className="flex items-center gap-2 shrink-0 no-underline">
