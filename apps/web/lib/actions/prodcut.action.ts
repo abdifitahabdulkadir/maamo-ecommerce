@@ -9,6 +9,7 @@ export async function GetAllProducts({
   category = "",
 }: ProductsQuery = {}): Promise<ActionResponse<PaginatedProducts>> {
   try {
+    console.log("current search: ",search)
     const params = new URLSearchParams({ page: String(page), limit: String(limit) });
     if (search) params.set("search", search);
     if (category) params.set("category", category);

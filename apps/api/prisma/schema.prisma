@@ -76,5 +76,6 @@ model Product {
   inStock       Boolean
   badge         String?
 
+
   @@map("products")
 }

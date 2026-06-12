@@ -35,18 +35,23 @@ export function ProductView() {
   const [searchTerm, setSearchTerm] = useState(term);
   const [debouncedTerm] = useDebouncedValue(searchTerm, { wait: 1500 });
 
+  const normalizedTerm = normalizeTerm(debouncedTerm);
+
   const { data, isLoading, isError, isPlaceholderData } = useQuery({
-    queryKey: ["products", currentPage, category, debouncedTerm],
+    queryKey: ["products", currentPage, category, normalizedTerm],
     queryFn: () =>
-      GetAllProducts({ page: currentPage, search: debouncedTerm, category }),
+      GetAllProducts({ page: currentPage, search: normalizedTerm, category }),
     placeholderData: keepPreviousData,
-    staleTime: term ? 0 : 5 * 60 * 1000, // 5 minutes,
-    gcTime: term ? 0 : undefined,
+    staleTime: normalizedTerm ? 0 : 5 * 60 * 1000, // 5 minutes,
+    gcTime: normalizedTerm ? 0 : undefined,
   });
 
+  // Sync the debounced term into the URL (?q=) and reset to page 1
   useEffect(() => {
-    goToPage(1);
-  }, [debouncedTerm]);
+    if (debouncedTerm === term) return;
+    const newUrl = updateQueryParams({ q: debouncedTerm, page: "" }) as Route;
+    router.push(newUrl, { scroll: false });
+  }, [debouncedTerm, term, router]);
 
   const products = data?.data?.products;
   const totalPages = data?.data?.totalPages ?? 0;
@@ -82,6 +87,9 @@ export function ProductView() {
       </div>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+        <p className="text-foreground/10 italic font-medium py-3">
+          Search Results: {products?.length}
+        </p>
         {isLoading ? (
           <ProductGridSkeleton count={20} />
         ) : failed ? (

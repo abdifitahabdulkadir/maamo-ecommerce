@@ -15,6 +15,7 @@ export class ProductsService {
   ): Promise<ActionResponse<PaginatedProducts>> {
     try {
       const skip = (page - 1) * limit;
+
       const where = {
         AND: [
           ...(category && category.toLowerCase() !== 'all'
@@ -23,15 +24,17 @@ export class ProductsService {
           ...(search
             ? [
                 {
-                  name: { search },
-                  category: { search },
-                  description: { search },
+                  OR: [
+                    { name: { search: search } },
+                    { category: { search: search } },
+                    { description: { search: search } },
+                  ],
                 },
               ]
             : []),
         ],
       };
-      const [items, total] = await this.db.$transaction([
+      const [items, total] = await Promise.all([
         this.db.product.findMany({
           where,
           skip,
@@ -41,8 +44,8 @@ export class ProductsService {
                 orderBy: {
                   _relevance: {
                     fields: ['name', 'description', 'category'] as const,
-                    search,
-                    sort: 'asc' as const,
+                    search: search,
+                    sort: 'desc' as const,
                   },
                 },
               }
@@ -50,6 +53,7 @@ export class ProductsService {
         }),
         this.db.product.count({ where }),
       ]);
+
       const totalPages = Math.ceil(total / limit);
 
       return {
@@ -62,6 +66,7 @@ export class ProductsService {
         },
       };
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         errors: {
