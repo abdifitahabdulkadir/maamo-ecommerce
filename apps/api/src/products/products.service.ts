@@ -15,7 +15,6 @@ export class ProductsService {
   ): Promise<ActionResponse<PaginatedProducts>> {
     try {
       const skip = (page - 1) * limit;
-
       const where = {
         AND: [
           ...(category && category.toLowerCase() !== 'all'

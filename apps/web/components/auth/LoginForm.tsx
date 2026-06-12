@@ -36,8 +36,11 @@ export default function LoginForm() {
   function onSubmit(data: LoginSchemaType) {
     startTransition(async () => {
       const result = await signIn(data);
+      console.log(result);
       if (result.status) {
+        console.log("rr");
         router.push("/");
+        toast.success("Successfully Logged In.");
         return;
       }
       toast.error(result.errors?.message ?? "Invalid credentials.");

@@ -1,7 +1,7 @@
 import {
   GetProductById,
   GetRelatedProducts,
-} from "@/lib/actions/prodcut.action";
+} from "@/lib/actions/product.action";
 import { ArrowLeft, ShieldCheck, Star, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

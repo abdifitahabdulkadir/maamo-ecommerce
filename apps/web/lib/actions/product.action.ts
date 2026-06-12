@@ -1,5 +1,10 @@
 "use server";
-import { ActionResponse, PaginatedProducts, Product, ProductsQuery } from "@org/lib";
+import {
+  ActionResponse,
+  PaginatedProducts,
+  Product,
+  ProductsQuery,
+} from "@org/lib";
 import { serverFetch } from "../fetch";
 
 export async function GetAllProducts({
@@ -9,24 +14,35 @@ export async function GetAllProducts({
   category = "",
 }: ProductsQuery = {}): Promise<ActionResponse<PaginatedProducts>> {
   try {
-    console.log("current search: ",search)
-    const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
     if (search) params.set("search", search);
     if (category) params.set("category", category);
-    const result = await serverFetch<PaginatedProducts>(`/api/products?${params}`, {
-      method: "GET",
-    });
+
+    const result = await serverFetch<PaginatedProducts>(
+      `/api/products?${params}`,
+      {
+        method: "GET",
+      },
+    );
 
     return { status: true, data: result.data };
   } catch (error) {
     return {
       status: false,
-      errors: { message: error instanceof Error ? error.message : "Failed to load Products" },
+      errors: {
+        message:
+          error instanceof Error ? error.message : "Failed to load Products",
+      },
     };
   }
 }
 
-export async function GetProductById(id: string): Promise<ActionResponse<Product>> {
+export async function GetProductById(
+  id: string,
+): Promise<ActionResponse<Product>> {
   try {
     const result = await serverFetch<Product>(`/api/products/${id}`, {
       method: "GET",
@@ -35,7 +51,10 @@ export async function GetProductById(id: string): Promise<ActionResponse<Product
   } catch (error) {
     return {
       status: false,
-      errors: { message: error instanceof Error ? error.message : "Failed to load product" },
+      errors: {
+        message:
+          error instanceof Error ? error.message : "Failed to load product",
+      },
     };
   }
 }
@@ -46,14 +65,22 @@ export async function GetRelatedProducts(
 ): Promise<ActionResponse<Product[]>> {
   try {
     const params = new URLSearchParams({ category, excludeId });
-    const result = await serverFetch<Product[]>(`/api/products/related?${params}`, {
-      method: "GET",
-    });
+    const result = await serverFetch<Product[]>(
+      `/api/products/related?${params}`,
+      {
+        method: "GET",
+      },
+    );
     return { status: result.status, data: result.data, errors: result.errors };
   } catch (error) {
     return {
       status: false,
-      errors: { message: error instanceof Error ? error.message : "Failed to load related products" },
+      errors: {
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to load related products",
+      },
     };
   }
 }

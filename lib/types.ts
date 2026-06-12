@@ -1,10 +1,10 @@
 export type ActionResponse<T = null> = {
-  data?: T,
-  status: boolean,
+  data?: T;
+  status: boolean;
   errors?: {
-    message:string,
-  }
-}
+    message: string;
+  };
+};
 
 export type SessionUser = {
   id: string;
@@ -13,10 +13,10 @@ export type SessionUser = {
   gender: string;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export enum AuthProviderID {
-  credentail
+  credentail,
 }
 
 export type ProductCategory =
@@ -54,4 +54,9 @@ export type PaginatedProducts = {
   page: number;
   totalPages: number;
   hasNextPage: boolean;
+};
+
+export type AuthCookieType = {
+  token: string;
+  expiresInMilliseconds: number;
 };

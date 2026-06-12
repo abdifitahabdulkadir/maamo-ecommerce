@@ -13,7 +13,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - You have access to the Nx MCP server and its tools, use them to help the user
 - NEVER guess CLI flags - always check nx_docs or `--help` first when unsure
 
-
 ## Common Commands
 
 All tasks are run through Nx using pnpm. Project names match the `name` field in each app's `package.json` (`web`, `api`, `@org/lib`).
@@ -41,21 +40,22 @@ pnpm nx sync
 This is a pnpm Nx monorepo with two apps and one shared library:
 
 - **`apps/web`** — Next.js 16 (App Router, React 19) frontend
-- **`apps/api`** — NestJS 11 backend 
+- **`apps/api`** — NestJS 11 backend
 - **`lib/`** — `@org/lib` shared library containing Zod validation schemas used by both apps
-
 
 ### Shared Library (`@org/lib`)
 
-`lib/*' is the file that exports all resuable interfaces, types, enums an so on for both web and api. check this file for the latest list of exports before you proceed with creating any types/shared interfaces.
+`lib/\*' is the file that exports all resuable interfaces, types, enums an so on for both web and api. check this file for the latest list of exports before you proceed with creating any types/shared interfaces.
 
 ### Web App (`apps/web`)
 
 **Route structure** (Next.js App Router with route groups):
+
 - `app/(auth)/login` and `app/(auth)/register` — unauthenticated pages
 - `app/(root)/` — authenticated/main app shell (has its own layout)
 
 **UI layer:**
+
 - shadcn/ui components live in `components/ui/` (style: `radix-nova`, Tailwind v4 CSS variables)
 - Feature components (e.g. auth forms) live in `components/<feature>/`
 - The `@/` path alias resolves to `apps/web/` (components, lib/utils, hooks)
@@ -100,3 +100,27 @@ Follow these steps in order when adding any feature to the NestJS backend:
 - When adding or changing anything in `@org/lib`, rebuild it first (`pnpm nx build @org/lib`) before running the web or API app.
 - Run `pnpm nx sync` after any inter-project import changes.
 - Never duplicate a type or schema that already exists in `@org/lib`.
+
+<!-- nx configuration start-->
+<!-- Leave the start & end comments to automatically receive updates. -->
+
+## General Guidelines for working with Nx
+
+- For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
+- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
+- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
+- You have access to the Nx MCP server and its tools, use them to help the user
+- For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
+- NEVER guess CLI flags - always check nx_docs or `--help` first when unsure
+
+## Scaffolding & Generators
+
+- For scaffolding tasks (creating apps, libs, project structure, setup), ALWAYS invoke the `nx-generate` skill FIRST before exploring or calling MCP tools
+
+## When to use nx_docs
+
+- USE for: advanced config options, unfamiliar flags, migration guides, plugin configuration, edge cases
+- DON'T USE for: basic generator syntax (`nx g @nx/react:app`), standard commands, things you already know
+- The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
+
+<!-- nx configuration end-->

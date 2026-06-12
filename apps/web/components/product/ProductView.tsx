@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductGridSkeleton } from "@/components/shared/loaders";
-import { GetAllProducts } from "@/lib/actions/prodcut.action";
+import { GetAllProducts } from "@/lib/actions/product.action";
 import { cn, updateQueryParams } from "@/lib/utils";
 import { useDebouncedValue } from "@tanstack/react-pacer";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -42,11 +42,13 @@ export function ProductView() {
     queryFn: () =>
       GetAllProducts({ page: currentPage, search: normalizedTerm, category }),
     placeholderData: keepPreviousData,
-    staleTime: normalizedTerm ? 0 : 5 * 60 * 1000, // 5 minutes,
-    gcTime: normalizedTerm ? 0 : undefined,
+    // 5 minutes before data become state and needs to re-fetch
+    staleTime: 5 * 60 * 1000,
+    // this is the time that this data should be
+    // remove from memory -by Garbage Collector (GC)  5 minutes
+    gcTime: 5 * 60 * 1000,
   });
 
-  // Sync the debounced term into the URL (?q=) and reset to page 1
   useEffect(() => {
     if (debouncedTerm === term) return;
     const newUrl = updateQueryParams({ q: debouncedTerm, page: "" }) as Route;

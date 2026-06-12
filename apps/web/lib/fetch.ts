@@ -17,10 +17,14 @@ export async function serverFetch<T>(
 ): Promise<ActionResponse<T>> {
   const { method = "GET", body, cache } = options;
 
-  const token = await getSessionToken();
+  const result = await getSessionToken();
 
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) {headers["Cookie"] = `session=${token}`;}
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (result.status || result.data) {
+    headers["Cookie"] = `session=${result.data}`;
+  }
 
   try {
     const res = await fetch(`${BASE_URL}${path}`, {
@@ -31,7 +35,6 @@ export async function serverFetch<T>(
     });
 
     const json = await res.json().catch(() => null);
-
     if (!res.ok) {
       const message =
         json?.message ??

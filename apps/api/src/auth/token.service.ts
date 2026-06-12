@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionResponse } from '@org/lib';
+import { ActionResponse, AuthCookieType } from '@org/lib';
 import { type Request, type Response } from 'express';
 import { User } from 'prisma/generated/client.js';
 import { UsersService } from 'src/users/users.service.js';
@@ -13,7 +13,7 @@ export class TokenService {
   async issueTokens(
     user: User,
     response: Response,
-  ): Promise<ActionResponse<string>> {
+  ): Promise<ActionResponse<AuthCookieType>> {
     try {
       const token = uuid();
       const sessionDuration = process.env.SESSION_DURATION_IN_MLS!;
@@ -41,7 +41,13 @@ export class TokenService {
         sameSite: 'lax',
       });
 
-      return { status: true, data: 'Successfully signed in.' };
+      return {
+        status: true,
+        data: {
+          token,
+          expiresInMilliseconds: expiresAt.getTime(),
+        },
+      };
     } catch (error) {
       return {
         status: false,

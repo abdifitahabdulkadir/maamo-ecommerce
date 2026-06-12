@@ -2,6 +2,8 @@
 
 import { serverFetch } from "@/lib/fetch";
 import {
+  AuthCookieType,
+  parseError,
   type ActionResponse,
   type LoginSchemaType,
   type RegisterSchemaType,
@@ -10,41 +12,122 @@ import {
 import { cookies } from "next/headers";
 
 // get user session from cookie.
-export async function getSessionToken(): Promise<string | null> {
-  const cookieStore = await cookies();
-  return cookieStore.get("session")?.value ?? null;
+export async function getSessionToken(): Promise<
+  ActionResponse<string | null>
+> {
+  try {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("session")?.value ?? null;
+
+    return {
+      status: true,
+      data: sessionToken,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      errors: {
+        message: parseError(error, "Failed to get Sesssion. try again."),
+      },
+    };
+  }
 }
 
 export async function signUp(
   data: RegisterSchemaType,
 ): Promise<ActionResponse<{ userId: string }>> {
-  return serverFetch<{ userId: string }>("/api/auth/signup", {
-    method: "POST",
-    body: data,
-  });
+  try {
+    return serverFetch<{ userId: string }>("/api/auth/signup", {
+      method: "POST",
+      body: data,
+    });
+  } catch (error) {
+    return {
+      status: false,
+      errors: {
+        message: parseError(error, "Failed to SignUp. try again."),
+      },
+    };
+  }
 }
 
 export async function signIn(
   data: LoginSchemaType,
 ): Promise<ActionResponse<string>> {
-  return serverFetch<string>("/api/auth/signin", {
-    method: "POST",
-    body: data,
-  });
+  try {
+    const result = await serverFetch<AuthCookieType>("/api/auth/signin", {
+      method: "POST",
+      body: data,
+    });
+    if (!result.status) {
+      throw new Error(result.errors?.message);
+    }
+    if (result.status && result.data) {
+      const { token, expiresInMilliseconds } = result.data;
+      const cookieStore = await cookies();
+      cookieStore.set("session", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        expires: new Date(expiresInMilliseconds),
+      });
+      console.log("in the sign in page");
+      console.log(token, expiresInMilliseconds);
+    }
+
+    return {
+      status: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      errors: {
+        message: parseError(error, "Failed to Login. try again."),
+      },
+    };
+  }
 }
 
 export async function getSession(): Promise<ActionResponse<SessionUser>> {
-  const token = await getSessionToken();
-  if (!token) return { status: false, errors: { message: "No session" } };
+  try {
+    const result = await getSessionToken();
+    if (!result.status || !result.data)
+      return { status: false, errors: { message: "No session" } };
 
-  return serverFetch<SessionUser>("/api/auth/session", { cache: "no-store" });
+    return serverFetch<SessionUser>("/api/auth/session", { cache: "no-store" });
+  } catch (error) {
+    return {
+      status: false,
+      errors: {
+        message: parseError(error, "Failed to Login. try again."),
+      },
+    };
+  }
 }
 
-
-
 export async function signOut(): Promise<ActionResponse<string>> {
-  const token = await getSessionToken();
-  if (!token) return { status: false, errors: { message: "No active session" } };
+  try {
+    const data = await getSessionToken();
+    if (!data.status || !data.data)
+      return { status: false, errors: { message: "No active session" } };
 
-  return serverFetch<string>("/api/auth/signout", { method: "POST" });
+    const result = await serverFetch<string>("/api/auth/signout", {
+      method: "POST",
+    });
+
+    if (result.status) {
+      const cookieStore = await cookies();
+      cookieStore.delete("session");
+    }
+    return result;
+  } catch (error) {
+    return {
+      status: false,
+      errors: {
+        message: parseError(error, "Failed to get Sesssion. try again."),
+      },
+    };
+  }
 }

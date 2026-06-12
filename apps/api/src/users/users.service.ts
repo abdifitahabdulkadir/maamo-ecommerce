@@ -14,6 +14,16 @@ export class UsersService {
     user: CreateUserDTO,
   ): Promise<ActionResponse<{ userId: string }>> {
     try {
+      const checkUserExisted = await this.db.user.findUnique({
+        where: {
+          email: user.email,
+        },
+      });
+
+      if (checkUserExisted) {
+        throw new Error('This Email is Already Taken');
+      }
+
       const result = await this.db.$transaction(async (dbTnx) => {
         const { name, email, password, gender } = user;
         const createdUser = await dbTnx.user.create({
