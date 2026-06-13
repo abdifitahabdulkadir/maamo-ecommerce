@@ -62,6 +62,7 @@ export async function signIn(
     if (!result.status) {
       throw new Error(result.errors?.message);
     }
+
     if (result.status && result.data) {
       const { token, expiresInMilliseconds } = result.data;
       const cookieStore = await cookies();
@@ -72,15 +73,12 @@ export async function signIn(
         path: "/",
         expires: new Date(expiresInMilliseconds),
       });
-      console.log("in the sign in page");
-      console.log(token, expiresInMilliseconds);
     }
 
     return {
       status: true,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: false,
       errors: {
@@ -96,7 +94,13 @@ export async function getSession(): Promise<ActionResponse<SessionUser>> {
     if (!result.status || !result.data)
       return { status: false, errors: { message: "No session" } };
 
-    return serverFetch<SessionUser>("/api/auth/session", { cache: "no-store" });
+    const dataSession = await serverFetch<SessionUser>("/api/auth/session", {
+      cache: "no-store",
+    });
+    if (!dataSession.status) {
+      return { status: false, errors: { message: "No session" } };
+    }
+    return dataSession;
   } catch (error) {
     return {
       status: false,

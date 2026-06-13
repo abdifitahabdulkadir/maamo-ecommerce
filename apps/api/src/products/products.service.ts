@@ -15,6 +15,7 @@ export class ProductsService {
   ): Promise<ActionResponse<PaginatedProducts>> {
     try {
       const skip = (page - 1) * limit;
+      console.log(search);
       const where = {
         AND: [
           ...(category && category.toLowerCase() !== 'all'
@@ -33,6 +34,8 @@ export class ProductsService {
             : []),
         ],
       };
+
+      console.time('Result ');
       const [items, total] = await Promise.all([
         this.db.product.findMany({
           where,
@@ -53,6 +56,7 @@ export class ProductsService {
         this.db.product.count({ where }),
       ]);
 
+      console.timeEnd('Result ');
       const totalPages = Math.ceil(total / limit);
 
       return {

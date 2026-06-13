@@ -18,6 +18,7 @@ export async function GetAllProducts({
       page: String(page),
       limit: String(limit),
     });
+
     if (search) params.set("search", search);
     if (category) params.set("category", category);
 
@@ -30,6 +31,7 @@ export async function GetAllProducts({
 
     return { status: true, data: result.data };
   } catch (error) {
+    console.log("from server action: ", error);
     return {
       status: false,
       errors: {

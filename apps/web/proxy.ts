@@ -9,7 +9,6 @@ export async function proxy(request: NextRequest) {
 
   const session = await getSession();
   const authenticated = session.status && !!session.data;
-  console.log(session, authenticated);
   if (!isAuthRoute && !authenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

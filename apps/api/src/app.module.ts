@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import z from 'zod';
 import { AuthModule } from './auth/auth.module.js';
 import { DatabaseModule } from './database/database.module.js';
@@ -9,6 +11,16 @@ import { UsersModule } from './users/users.module.js';
 @Module({
   imports: [
     DatabaseModule,
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          name: 'long',
+          ttl: 1000, // 1 second
+          limit: 10,
+        },
+      ],
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -29,6 +41,11 @@ import { UsersModule } from './users/users.module.js';
     ProductsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

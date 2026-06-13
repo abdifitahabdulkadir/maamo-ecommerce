@@ -546,67 +546,68 @@ const CATEGORY_DATA: Record<ProductCategory, CategoryData> = {
   },
 };
 
-function generateProducts(): Product[] {
-  const categories: ProductCategory[] = [
-    'Electronics',
-    'Clothing',
-    'Home & Kitchen',
-    'Sports',
-    'Beauty',
-    'Books',
-    'Furniture',
-  ];
-  const total = 1_000_000;
-  const products: Product[] = new Array(total);
+export const TOTAL_PRODUCTS = 10_000_000;
 
-  for (let i = 0; i < total; i++) {
-    const id = i + 1;
-    const s = id;
-    const category = categories[i % categories.length];
-    const data = CATEGORY_DATA[category];
+const CATEGORIES: ProductCategory[] = [
+  'Electronics',
+  'Clothing',
+  'Home & Kitchen',
+  'Sports',
+  'Beauty',
+  'Books',
+  'Furniture',
+];
 
-    const adj = pick(data.adjectives, s * 7);
-    const noun = pick(data.nouns, s * 11);
-    const sub = pick(data.subtypes, s * 13);
-    const variantNum = Math.floor(i / categories.length) + 1;
+function generateProduct(i: number): Product {
+  const id = i + 1;
+  const s = id;
+  const category = CATEGORIES[i % CATEGORIES.length];
+  const data = CATEGORY_DATA[category];
 
-    const priceT = h(s * 17);
-    const price =
-      Math.round(
-        (data.minPrice + priceT * (data.maxPrice - data.minPrice)) * 100,
-      ) / 100;
+  const adj = pick(data.adjectives, s * 7);
+  const noun = pick(data.nouns, s * 11);
+  const sub = pick(data.subtypes, s * 13);
+  const variantNum = Math.floor(i / CATEGORIES.length) + 1;
 
-    const hasDiscount = h(s * 19) > 0.5;
-    const originalPrice = hasDiscount
-      ? Math.round(price * (1.1 + h(s * 23) * 0.3) * 100) / 100
-      : undefined;
+  const priceT = h(s * 17);
+  const price =
+    Math.round(
+      (data.minPrice + priceT * (data.maxPrice - data.minPrice)) * 100,
+    ) / 100;
 
-    const rating = Math.round((3.0 + h(s * 29) * 2.0) * 10) / 10;
-    const reviewCount = Math.floor(h(s * 31) * 50000) + 5;
-    const inStock = h(s * 37) > 0.08;
-    const image = `https://picsum.photos/seed/${id}/600/600`;
-    const badge =
-      h(s * 43) > 0.7 ? (pick(BADGES, s * 47) as string) : undefined;
+  const hasDiscount = h(s * 19) > 0.5;
+  const originalPrice = hasDiscount
+    ? Math.round(price * (1.1 + h(s * 23) * 0.3) * 100) / 100
+    : undefined;
 
-    const product: Product = {
-      id: String(id),
-      name: `${adj} ${noun} ${sub} ${variantNum}`,
-      price,
-      category,
-      description: data.desc(adj, noun, sub, variantNum),
-      image,
-      rating,
-      reviewCount,
-      inStock,
-    };
+  const rating = Math.round((3.0 + h(s * 29) * 2.0) * 10) / 10;
+  const reviewCount = Math.floor(h(s * 31) * 50000) + 5;
+  const inStock = h(s * 37) > 0.08;
+  const image = `https://picsum.photos/seed/${id}/600/600`;
+  const badge = h(s * 43) > 0.7 ? (pick(BADGES, s * 47) as string) : undefined;
 
-    if (originalPrice !== undefined) product.originalPrice = originalPrice;
-    if (badge !== undefined) product.badge = badge;
+  const product: Product = {
+    id: String(id),
+    name: `${adj} ${noun} ${sub} ${variantNum}`,
+    price,
+    category,
+    description: data.desc(adj, noun, sub, variantNum),
+    image,
+    rating,
+    reviewCount,
+    inStock,
+  };
 
-    products[i] = product;
-  }
+  if (originalPrice !== undefined) product.originalPrice = originalPrice;
+  if (badge !== undefined) product.badge = badge;
 
-  return products;
+  return product;
 }
 
-export const PRODUCTS: Product[] = generateProducts();
+export function generateProductBatch(start: number, count: number): Product[] {
+  const batch: Product[] = new Array(count);
+  for (let i = 0; i < count; i++) {
+    batch[i] = generateProduct(start + i);
+  }
+  return batch;
+}

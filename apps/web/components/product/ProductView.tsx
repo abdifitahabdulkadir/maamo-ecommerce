@@ -89,9 +89,14 @@ export function ProductView() {
       </div>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
-        <p className="text-foreground/10 italic font-medium py-3">
-          Search Results: {products?.length}
-        </p>
+        {products && products.length ? (
+          <p className="text-foreground my-3 italic font-medium py-3">
+            Search Results:{" "}
+            {products?.length &&
+              (products.length * totalPages).toLocaleString()}
+          </p>
+        ) : null}
+
         {isLoading ? (
           <ProductGridSkeleton count={20} />
         ) : failed ? (
